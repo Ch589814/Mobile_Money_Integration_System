@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class MobileMoneyIntegrationSystemApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MobileMoneyIntegrationSystemApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MobileMoneyIntegrationSystemApplication.class, args);
+    }
 
 }
