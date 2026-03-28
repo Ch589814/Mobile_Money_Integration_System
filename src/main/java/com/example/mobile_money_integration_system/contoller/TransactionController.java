@@ -2,13 +2,13 @@ package com.example.mobile_money_integration_system.contoller;
 
 import com.example.mobile_money_integration_system.dto.DepositWithdrawRequest;
 import com.example.mobile_money_integration_system.dto.SendMoneyRequest;
-import com.example.mobile_money_integration_system.dto.TransactionRequest;
 import com.example.mobile_money_integration_system.entity.Transaction;
-import com.example.mobile_money_integration_system.repository.TransactionRepository;
 import com.example.mobile_money_integration_system.service.TransactionService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDateTime;
+
 import java.util.List;
+
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionController {
@@ -30,20 +30,15 @@ public class TransactionController {
 
     @PostMapping("/deposit")
     public Transaction depositMoney(@RequestBody DepositWithdrawRequest request) {
-        return transactionService.depositMoney(
-                request.getUsername(),
-                request.getAmount()
-        );
+        return transactionService.depositMoney(request.getUsername(), request.getAmount());
     }
 
     @PostMapping("/withdraw")
     public Transaction withdrawMoney(@RequestBody DepositWithdrawRequest request) {
-        return transactionService.withdrawMoney(
-                request.getUsername(),
-                request.getAmount()
-        );
+        return transactionService.withdrawMoney(request.getUsername(), request.getAmount());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<Transaction> getAllTransactions() {
         return transactionService.getAllTransactions();

@@ -1,11 +1,11 @@
 package com.example.mobile_money_integration_system.contoller;
-import com.example.mobile_money_integration_system.service.TransactionService;
-import org.springframework.web.bind.annotation.*;
-import com .example.mobile_money_integration_system.entity.User;
+
+import com.example.mobile_money_integration_system.entity.User;
 import com.example.mobile_money_integration_system.repository.UserRepository;
+import com.example.mobile_money_integration_system.service.TransactionService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.List;
 
 @RestController
@@ -20,16 +20,19 @@ public class UserController {
         this.transactionService = transactionService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public User getUserById(@PathVariable Long id) {
         return userRepository.findById(id).orElseThrow();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable Long id) {
         userRepository.deleteById(id);
