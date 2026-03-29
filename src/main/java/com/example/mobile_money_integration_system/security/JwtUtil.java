@@ -3,10 +3,15 @@ package com.example.mobile_money_integration_system.security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
@@ -30,8 +35,27 @@ public class JwtUtil {
                 .compact();
     }
 
+    public String generateToken(UserDetails userDetails) {
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        return Jwts.builder()
+                .subject(userDetails.getUsername())
+                .claim("roles", roles)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + expirationMs))
+                .signWith(getSigningKey())
+                .compact();
+    }
+
     public String extractUsername(String token) {
         return parseClaims(token).getPayload().getSubject();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<String> extractRoles(String token) {
+        return (List<String>) parseClaims(token).getPayload().get("roles");
     }
 
     public boolean validateToken(String token) {

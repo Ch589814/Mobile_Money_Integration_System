@@ -55,7 +55,7 @@ public class AuthController {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
-        String token = jwtUtil.generateToken(auth.getName());
+        String token = jwtUtil.generateToken((org.springframework.security.core.userdetails.UserDetails) auth.getPrincipal());
         return ResponseEntity.ok(Map.of("token", token));
     }
 }
